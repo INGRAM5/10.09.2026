@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Приглашение на свадьбу | Артём & Валерия</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Tenor+Sans&display=swap');
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: #234159;
+            font-family: 'Montserrat', sans-serif;
+            color: #F5F3EF;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding-bottom: 110px;
+            overflow-x: hidden;
+        }
+
+        /* --- СИСТЕМА ПЛАВНОГО СКРОЛЛА --- */
+        .reveal {
+            opacity: 0;
+            transform: scale(0.96) translateY(30px);
+            filter: blur(5px);
+            transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+            pointer-events: none;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+            filter: blur(0);
+            pointer-events: auto;
+        }
+
+        .main-content {
+            width: 100%;
+            max-width: 450px;
+            padding: 0 15px;
+        }
+
+        .content-card {
+            background-color: rgba(255, 255, 255, 0.05);
+            padding: 25px 20px;
+            border-radius: 18px;
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-family: 'Tenor Sans', sans-serif;
+            font-size: 26px;
+            text-transform: uppercase;
+            text-align: center;
+            letter-spacing: 3px;
+            margin: 35px 0 20px 0;
+            color: #F5F3EF;
+        }
+
+        /* --- ЖУРНАЛЬНОЕ ОФОРМЛЕНИЕ И АНИМАЦИЯ ИМЕН --- */
+        .premium-header {
+            text-align: center;
+            padding: 40px 10px 25px 10px;
+            margin-top: 15px;
+            position: relative;
+        }
+
+        .header-line {
+            width: 60px;
+            height: 1px;
+            background-color: rgba(233, 219, 190, 0.4);
+            margin: 0 auto;
+        }
+
+        .names-wrapper {
+            font-family: 'Tenor Sans', sans-serif;
+            font-size: 32px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            line-height: 1.2;
+            margin: 15px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .name-groom {
+            opacity: 0;
+            transform: translateX(-30px);
+            animation: slideInLeft 1s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+            color: #e9dbbe;
+        }
+
+        .name-ampersand {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 26px;
+            font-style: italic;
+            font-weight: 400;
+            color: #C06C50;
+            margin: 4px 0;
+            opacity: 0;
+            animation: fadeInSimple 0.8s ease forwards;
+            animation-delay: 0.6s;
+        }
+
+        .name-bride {
+            opacity: 0;
+            transform: translateX(30px);
+            animation: slideInRight 1s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+            animation-delay: 0.2s;
+            color: #e9dbbe;
+        }
+
+        @keyframes slideInLeft { to { opacity: 1; transform: translateX(0); } }
+        @keyframes slideInRight { to { opacity: 1; transform: translateX(0); } }
+        @keyframes fadeInSimple { to { opacity: 1; } }
+
+        /* --- ОЛИВКОВЫЙ БЛОК ГАЛЕРЕИ И КАЛЕНДАРЯ --- */
+
+.olive-content-block {
+    background-color: transparent; /* Полная прозрачность */
+    border-radius: 18px;
+    margin: 20px 0 30px 0;
+    padding: 15px;
+}
+
+
+        /* Строгие фиксированные пропорции без эффекта теснения */
+        .gallery-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 15px;
+            width: 100%;
+            height: 155px;
+        }
+
+        .interactive-cell {
+            position: relative;
+            perspective: 1000px;
+            height: 100%;
+        }
+
+        /* Пропорции ячеек как на макете */
+        .cell-l, .cell-r { width: 25%; }
+        .cell-c { width: 44%; }
+
+        .cell-front, .cell-back {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 14px;
+            backface-visibility: hidden;
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .cell-front img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 14px;
+            display: block;
+            cursor: zoom-in;
+        }
+
+        .cell-back {
+            background-color: #e9dbbe;
+            color: #234159;
+            font-family: 'Tenor Sans', sans-serif;
+            font-size: 28px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform: rotateY(180deg);
+        }
+
+        /* Поочередная задержка 3D переворота */
+        .interactive-cell:nth-child(1) .cell-front, .interactive-cell:nth-child(1) .cell-back { transition-delay: 0s; }
+        .interactive-cell:nth-child(2) .cell-front, .interactive-cell:nth-child(2) .cell-back { transition-delay: 0.2s; }
+        .interactive-cell:nth-child(3) .cell-front, .interactive-child:nth-child(3) .cell-back { transition-delay: 0.4s; }
+
+        .interactive-cell.flipped .cell-front { transform: rotateY(-180deg); }
+        .interactive-cell.flipped .cell-back { transform: rotateY(0deg); }
+
+        /* БЕЗОПАСНЫЙ ПОЛНОЭКРАННЫЙ ОВЕРЛЕЙ */
+        .fullscreen-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(15, 30, 41, 0.96);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+
+        .fullscreen-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .fullscreen-overlay img {
+            max-width: 92vw;
+            max-height: 85vh;
+            object-fit: contain;
+            border-radius: 12px;
+            transform: scale(0.9);
+            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            cursor: zoom-out;
+        }
+
+        .fullscreen-overlay.active img {
+            transform: scale(1);
+        }
+
+        /* Календарь */
+        .calendar-box {
+            text-align: center;
+            padding: 20px 12px;
+            background-color: #e9dbbe;
+            border-radius: 14px;
+            width: 100%;
+        }
+
+        .calendar-month {
+            font-family: 'Tenor Sans', sans-serif;
+            font-size: 22px;
+            color: #C06C50;
+            font-weight: bold;
+            text-transform: lowercase;
+            margin-bottom: 18px;
+            letter-spacing: 1px;
+        }
+
+        .calendar-days-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            align-items: center;
+            justify-items: center;
+        }
+
+        .day-cell {
+            font-size: 15px;
+            color: #305C7D;
+            position: relative;
+            width: 100%;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .day-cell.muted { color: rgba(48, 92, 125, 0.35); }
+
+        .day-cell .event-icon {
+            position: absolute;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 44px;
+            height: 44px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            z-index: 1;
+            opacity: 0.9;
+        }
+
+        .pulse-town { animation: townSmoothPulse 2.5s infinite ease-in-out; }
+        @keyframes townSmoothPulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.15); }
+        }
+
+        .day-cell .date-number { position: relative; z-index: 2; text-shadow: 1px 1px 2px rgba(255,255,255,0.8); }
+
+        /* ТЕРРАКОТОВАЯ КАРТОЧКА ПРИГЛАШЕНИЯ */
+        .invitation-text-card {
+            background-color: #C06C50;
+            border-radius: 18px;
+            padding: 25px 22px;
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .invitation-text-card p { font-size: 16px; line-height: 1.6; color: #F5F3EF; font-weight: 600; }
+
+        /* ПРОГРАММА ДНЯ */
+        .day-container { margin-bottom: 25px; border-radius: 16px; padding: 15px 10px; }
+        .day-divider { font-family: 'Tenor Sans', sans-serif; font-size: 17px; font-weight: bold; margin: 5px 0; text-transform: uppercase; letter-spacing: 1.5px; display: flex; align-items: center; gap: 10px; }
+        .day-quick-location { font-size: 13px; margin-bottom: 15px; font-weight: 600; padding-left: 28px; }
+        .timeline-item { margin-bottom: 10px; }
+        
+        .timeline-header {
+            padding: 18px; border-radius: 14px; cursor: pointer;
+            display: flex; justify-content: space-between; align-items: center;
+            transition: background 0.3s, transform 0.2s;
+        }
+        .timeline-header:active { transform: scale(0.99); }
+
+        /* ДЕНЬ 1: Оливковый */
+        .day-one-zone { background-color: rgba(125, 132, 83, 0.15); }
+        .day-one-zone .day-divider { color: #e9dbbe; }
+        .day-one-zone .day-quick-location { color: #f5efe1; opacity: 0.8; }
+        .day-one-zone .timeline-header { background-color: #7D8453; color: #F5F3EF; }
+        .day-one-zone .timeline-time { color: #e9dbbe; font-size: 18px; font-weight: 800; margin-right: 15px; font-family: 'Tenor Sans', sans-serif; }
+        .day-one-zone .timeline-title { font-weight: 700; color: #F5F3EF; }
+        .day-one-zone .timeline-arrow { color: #e9dbbe; transition: transform 0.3s; font-size: 11px; }
+        .day-one-zone .timeline-item.open .timeline-header { background-color: #646a42; border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
+        .day-one-zone .timeline-content { background-color: rgba(125, 132, 83, 0.1); border-radius: 0 0 14px 14px; }
+        .day-one-zone .timeline-body { color: #f5efe1; }
+
+        /* ДЕНЬ 2: Песочный */
+        .day-two-zone { background-color: rgba(233, 219, 190, 0.1); margin-top: 35px; }
+        .day-two-zone .day-divider { color: #e9dbbe; }
+        .day-two-zone .day-quick-location { color: #e9dbbe; }
+        .day-two-zone .timeline-header { background-color: #e9dbbe; color: #234159; }
+        .day-two-zone .timeline-time { color: #C06C50; font-size: 18px; font-weight: 800; margin-right: 15px; font-family: 'Tenor Sans', sans-serif; }
+        .day-two-zone .timeline-title { font-weight: 700; color: #234159; }
+        .day-two-zone .timeline-arrow { color: #C06C50; transition: transform 0.3s; font-size: 11px; }
+        .day-two-zone .timeline-item.open .timeline-header { background-color: #dfceab; border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
+        .day-two-zone .timeline-content { background-color: rgba(233, 219, 190, 0.15); border-radius: 0 0 14px 14px; }
+        .day-two-zone .timeline-body { color: #e9dbbe; }
+
+        .timeline-title { flex-grow: 1; font-size: 14px; }
+        .timeline-content { max-height: 0; overflow: hidden; transition: max-height 0.4s cubic-bezier(0.25, 1, 0.5, 1); }
+        .timeline-body { padding: 20px 16px; font-size: 14px; line-height: 1.6; }
+        .timeline-item.open .timeline-arrow { transform: rotate(180deg); }
+
+        /* Карты */
+        .map-wrapper { width: 100%; height: 190px; margin: 15px 0 10px 0; border-radius: 10px; overflow: hidden; }
+        .map-wrapper iframe { width: 100%; height: 100%; border: none; }
+
+        .map-action-btn {
+            display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 12px;
+            background-color: #C06C50; color: #F5F3EF; text-decoration: none; border-radius: 10px; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 4px 10px rgba(0,0,0,0.15); transition: background 0.3s;
+        }
+        .map-action-btn:hover { background-color: #a4563d; }
+        .day-two-zone .map-action-btn { background-color: #7D8453; }
+        .day-two-zone .map-action-btn:hover { background-color: #646a42; }
+
+
+        /* === ДРЕСС-КОД ===  */
+        .dress-code-selector { display: flex; flex-direction: column; gap: 15px; }
+        
+        /* Главная плашка-кнопка */
+        .main-color-block { border-radius: 12px; padding: 16px; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; border: 1px solid rgba(255,255,255,0.1); }
+        .main-color-block:active { transform: scale(0.99); }
+        
+        /* Цвета для самих плашек-кнопок в закрытом состоянии */
+        .main-color-block.blue-style { background-color: #305C7D; color: #F5F3EF; }
+        .main-color-block.terra-style { background-color: #C06C50; color: #F5F3EF; }
+        
+        .main-color-trigger { display: flex; align-items: center; justify-content: space-between; }
+        .color-name-label { font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+        .dropdown-arrow { font-size: 11px; transition: transform 0.3s; }
+        .main-color-block.open .dropdown-arrow { transform: rotate(180deg); }
+
+        /* Выпадающий контент */
+        .sub-colors-content { max-height: 0; overflow: hidden; transition: max-height 0.4s cubic-bezier(0.25, 1, 0.5, 1); }
+        .sub-colors-inner { padding-top: 15px; display: flex; flex-direction: column; gap: 15px; }
+
+        /* Строки оттенков во всю ширину */
+        .color-row-strip { display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 14px 16px; border-radius: 8px; box-sizing: border-box; font-weight: 600; font-size: 12px; letter-spacing: 0.5px; }
+        .color-row-strip .hex-code { opacity: 0.8; font-family: monospace; font-size: 13px; }
+
+        /* Горизонтальная галерея образов */
+        .lookbook-slider { display: flex; gap: 12px; overflow-x: auto; padding: 5px 0 10px 0; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; }
+        .lookbook-slider::-webkit-scrollbar { height: 4px; }
+        .lookbook-slider::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); border-radius: 10px; }
+        .lookbook-slider::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
+        .lookbook-img { width: 140px; height: 200px; object-fit: cover; border-radius: 8px; flex-shrink: 0; scroll-snap-align: start; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+
+        /* МЕРЗКИЕ ИСКЛЮЧЕНИЯ */
+        .prohibited-zone { position: relative; display: flex; flex-direction: column; gap: 6px; padding: 12px 16px; border-radius: 8px; overflow: hidden; border: 1px solid rgba(255,0,0,0.2); }
+        /* Эффект перечеркивания плашки */       
+        
+        .prohibited-title { font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; color: #FFF; text-shadow: 0 1px 3px rgba(0,0,0,0.5); }
+        .prohibited-desc { font-size: 12px; font-weight: 700; color: #FFF; text-shadow: 0 1px 3px rgba(0,0,0,0.5); }
+        
+        /* Точечные ядовитые цвета для запретов */
+        .prohibited-zone.bad-blue { background-color: #0047FF !important; } /* Мерзкий Васильковый / Электрик */
+        .prohibited-zone.bad-orange { background-color: #FF4500 !important; } /* Кислотно-морковный */
+
+        /* ДОПОЛНИТЕЛЬНЫЕ БАЗОВЫЕ ОТТЕНКИ */
+        .neutral-palette-box { margin-top: 25px; padding: 15px; background: rgba(255, 255, 255, 0.02); border-radius: 12px; border: 1px dashed rgba(255, 255, 255, 0.1); }
+        .neutral-palette-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #e9dbbe; text-align: center; margin-bottom: 4px; }
+        .neutral-palette-subtitle { font-size: 11px; color: rgba(245, 243, 239, 0.6); text-align: center; margin-bottom: 15px; font-style: italic; }
+        .neutral-rows-container { display: flex; flex-direction: column; gap: 8px; }
+        .neutral-row-tag { display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; border-radius: 6px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+        
+        
+        
+        /* ПОЖЕЛАНИЯ */
+        .wishes-card { background-color: #e9dbbe; border-radius: 18px; padding: 25px 20px; margin-bottom: 30px; color: #234159; }
+        .wishes-text { font-size: 14px; line-height: 1.7; margin-bottom: 12px; font-weight: 500; }
+
+        /* АНКЕТА */
+        .form-placeholder { background-color: rgba(125, 132, 83, 0.15); border-radius: 16px; padding: 35px 20px; text-align: center; font-weight: 600; color: #e9dbbe; }
+
+        /* КОНТАКТЫ */
+        .contacts-section { display: flex; flex-direction: column; gap: 12px; }
+        .contact-row { display: flex; justify-content: space-between; align-items: center; background: rgba(255, 255, 255, 0.03); padding: 14px 18px; border-radius: 12px; }
+        .contact-info-left .role { font-size: 11px; text-transform: uppercase; color: #e9dbbe; letter-spacing: 1px; display: block; }
+        .contact-info-left .name { font-size: 15px; font-weight: 600; }
+        .tg-btn { background-color: #2481cc; color: #fff; text-decoration: none; padding: 8px 14px; border-radius: 8px; font-size: 12px; font-weight: 700; }
+        .contact-row.host-row { background: rgba(125, 132, 83, 0.15); }
+
+
+/* Карточка локации */
+.location-copy-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 16px 0 12px 0;
+    padding: 10px 14px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(233, 219, 190, 0.3);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    user-select: none;
+    text-align: left;
+}
+
+.loc-icon {
+    font-size: 20px;
+    transition: transform 0.2s ease;
+}
+
+.loc-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #e9dbbe; /* Твой песочный/золотой */
+    margin-bottom: 2px;
+}
+
+.loc-addr {
+    font-size: 11px;
+    color: rgba(245, 239, 225, 0.6); /* Приглушенный светлый */
+    text-transform: none;
+    letter-spacing: 0.5px;
+}
+
+/* Эффект при клике на телефоне */
+.location-copy-card:active {
+    transform: scale(0.98);
+}
+
+/* Класс успешного копирования (включается через JS) */
+.location-copy-card.copied-state {
+    background: #7D8453 !important; /* Твой свадебный зеленый */
+    border-color: #7D8453 !important;
+}
+
+.location-copy-card.copied-state .loc-title {
+    color: #ffffff !important;
+}
+
+.location-copy-card.copied-state .loc-addr {
+    color: rgba(255, 255, 255, 0.9) !important;
+}
+
+
+
+        /* ФИКСИРОВАННЫЙ ТАЙМЕР */
+        .fixed-countdown {
+            position: fixed; bottom: 0; left: 0; width: 100%;
+            background-color: #1a3245; display: flex; justify-content: space-around; padding: 14px 0;
+            z-index: 100; opacity: 0; transform: translateY(20px);
+            transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        .fixed-countdown.ready { opacity: 1; transform: translateY(0); }
+        .countdown-item { text-align: center; flex: 1; }
+        .countdown-value { font-family: 'Tenor Sans', sans-serif; font-size: 24px; font-weight: bold; color: #e9dbbe; }
+        .countdown-value.seconds { color: #C06C50; }
+        .countdown-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #F5F3EF; margin-top: 2px; opacity: 0.7; }
+    </style>
+</head>
+<body>
+
+    <div class="fullscreen-overlay" id="fullscreenOverlay" onclick="closeFullscreen()">
+        <img id="fullscreenImage" src="" alt="Полный экран">
+    </div>
+
+    <div class="main-content">
+        <header class="premium-header">
+            <div class="header-line"></div>
+            <div class="names-wrapper">
+                <span class="name-groom">Артём</span>
+                <span class="name-ampersand">&amp;</span>
+                <span class="name-bride">Валерия</span>
+            </div>
+            <div class="header-line"></div>
+        </header>
+
+        <h1 class="section-title">Наша свадьба</h1>
+
+        <div class="olive-content-block reveal">
+            <div class="gallery-row">
+                
+                <div class="interactive-cell cell-l">
+                    <div class="cell-front"><img src="L1.png" alt="Левое фото" onclick="openFullscreen(this.src)"></div>
+                    <div class="cell-back">10</div>
+                </div>
+
+                <div class="interactive-cell cell-c">
+                    <div class="cell-front"><img src="C1.png" alt="Центральное фото" onclick="openFullscreen(this.src)"></div>
+                    <div class="cell-back">09</div>
+                </div>
+
+                <div class="interactive-cell cell-r">
+                    <div class="cell-front"><img src="R1.png" alt="Правое фото" onclick="openFullscreen(this.src)"></div>
+                    <div class="cell-back">26</div>
+                </div>
+
+            </div>
+
+            <div class="calendar-box">
+                <div class="calendar-month">сентябрь 2026</div>
+                <div class="calendar-days-grid" id="calendarDays"></div>
+            </div>
+        </div>
+
+        <div class="invitation-text-card reveal">
+            <p>Наши сердца уже вместе, и мы хотим разделить это счастье с вами. Приходите на праздник нашей любви, чтобы смеяться, радоваться, обниматься и наслаждаться каждым мгновением этого дня.</p>
+        </div>
+
+        <section class="reveal">
+            <h2 class="section-title">Программа дня</h2>
+            <div class="content-card" style="padding: 10px 5px; background: transparent;">
+                
+                <div class="day-container day-one-zone">
+                    <div class="day-divider">💍 День 1 — 10 Сентября</div>
+                    <div class="day-quick-location">📍 ЗАГС: Дворец бракосочетания №2</div>
+                    
+<div class="timeline-item">
+                        <div class="timeline-header" onclick="toggleTimeline(this)">
+                            <span class="timeline-time">11:00</span>
+                            <span class="timeline-title">Встреча самых близких</span>
+                            <span class="timeline-arrow">▼</span>
+                        </div>
+
+                        <div class="timeline-content">
+                            <div class="timeline-body">
+                                Наш волшебный свадебный день начинается именно здесь! Ждём вас нарядными, счастливыми и готовыми разделить эту невероятную радость с нами. Собираемся у главного входа!
+                                
+                                <div class="location-copy-card" onclick="copyLocationAddress('Санкт-Петербург, Фурштатская улица, 52', this)">
+                                    <div class="loc-icon">📍</div>
+                                    <div class="loc-info">
+                                        <div class="loc-title">Дворец бракосочетания №2 (Фурштатская)</div>
+                                        <div class="loc-addr">Фурштатская ул., 52 (нажмите, чтобы скопировать)</div>
+                                    </div>
+                                </div>
+
+                                <div class="map-wrapper">
+                                    <iframe src="https://yandex.ru/map-widget/v1/?ll=30.364853%2C59.945407&pt=30.364853%2C59.945407%2Cpm2rdm&z=16" allowfullscreen="true"></iframe>                                   
+                                </div>
+                                
+                                <a href="https://yandex.ru/maps/?pt=30.364853,59.945407&z=16&l=map" 
+                                   target="_blank" 
+                                   class="map-action-btn">🚀 Открыть в Яндекс Навигаторе</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+
+                    <div class="timeline-item">
+                        <div class="timeline-header" onclick="toggleTimeline(this)">
+                            <span class="timeline-time">11:20</span>
+                            <span class="timeline-title">Время сказать «Да»</span>
+                            <span class="timeline-arrow">▼</span>
+                        </div>
+                        <div class="timeline-content">
+                            <div class="timeline-body">
+                                Момент, когда два сердца становятся одним целым! Мы очень ждём этого дня и надеемся, что вы будете рядом, чтобы поддержать нас своими улыбками и искренними эмоциями🥰
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-header" onclick="toggleTimeline(this)">
+                            <span class="timeline-time">11:40</span>
+                            <span class="timeline-title">Здравствуй, праздник!</span>
+                            <span class="timeline-arrow">▼</span>
+                        </div>
+                        <div class="timeline-content">
+                            <div class="timeline-body">
+                                Ура! Первые крики «Горько!», искренние объятия, звон хрустальных бокалов и праздничный фуршет прямо в интерьерах Дворца. Начинаем праздновать на полную! 🥂
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-header" onclick="toggleTimeline(this)">
+                            <span class="timeline-time">14:40</span>
+                            <span class="timeline-title">Первые итоги дня</span>
+                            <span class="timeline-arrow">▼</span>
+                        </div>
+                        <div class="timeline-content">
+                            <div class="timeline-body">
+                                Наша торжественная часть подходит к финалу. Делаем грандиозные общие фотографии на память, обнимаемся и плавно настраиваемся на загородный уикенд! 
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="day-container day-two-zone">
+                    <div class="day-divider">🏡 День 2 — 11 Сентября</div>
+                    <div class="day-quick-location">📍 Коттедж: д. Васкелово, СНТ Радуга</div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-header" onclick="toggleTimeline(this)">
+                            <span class="timeline-time">16:00</span>
+                            <span class="timeline-title">Afterparty</span>
+                            <span class="timeline-arrow">▼</span>
+                        </div>
+                        <div class="timeline-content">
+                            <div class="timeline-body">
+                                Забудьте про строгие костюмы и каблуки! Врываемся в полный релакс-режим. Загородный коттедж, свежий воздух, природа и бесконечный комфорт и развлечения ждут нас всех! 🌲
+                                
+                                <div class="location-copy-card" onclick="copyLocationAddress('Ленинградская область, Всеволожский район, Куйвозовское сельское поселение, деревня Васкелово, СНТ Радуга, 1-я улица, 8', this)">
+                                    <div class="loc-icon">🏡</div>
+                                    <div class="loc-info">
+                                        <div class="loc-title">Загородный коттедж (Васкелово)</div>
+                                        <div class="loc-addr">СНТ Радуга, 1-я улица, 8 (нажмите, чтобы скопировать)</div>
+                                    </div>
+                                </div>
+
+                                <div class="map-wrapper">
+                                    <iframe src="https://yandex.ru/map-widget/v1/?ll=30.328750%2C60.373328&pt=30.328750%2C60.373328%2Cpm2rdm&z=14" allowfullscreen="true"></iframe>                                    
+                                </div>
+                                
+                                <a href="https://yandex.ru/maps/?pt=30.328750,60.373328&z=14&l=map" 
+                                   target="_blank" 
+                                   class="map-action-btn">🚀 Открыть в Яндекс Навигаторе</a>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="timeline-item">
+                        <div class="timeline-header" onclick="toggleTimeline(this)">
+                            <span class="timeline-time">17:00</span>
+                            <span class="timeline-title">BBQ &amp; Полный релакс</span>
+                            <span class="timeline-arrow">▼</span>
+                        </div>
+                        <div class="timeline-content">
+                            <div class="timeline-body">
+                                Время вкусных кулинарных сюрпризов, ледяных напитков, зажигательной музыки и душевных разговоров! Никаких таймингов и забот — только танцы, весёлые игры и чистый отрыв! 🔥🍖
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-header" onclick="toggleTimeline(this)">
+                            <span class="timeline-time">22:00</span>
+                            <span class="timeline-title">Уютный финал</span>
+                            <span class="timeline-arrow">▼</span>
+                        </div>
+                        <div class="timeline-content">
+                            <div class="timeline-body">
+                                Вечер опускается на Васкелово. Перебираемся к уютному очагу, греемся, ведём самые тёплые и искренние разговоры и шикарно финалим этот незабываемый свадебный марафон ✨🌕
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <section class="reveal">
+            <h2 class="section-title">Дресс-код</h2>
+            <div class="content-card">
+                <p style="font-size: 14px; line-height: 1.6; margin-bottom: 20px; text-align: center;">Будем очень рады, если при выборе праздничных нарядов вы поддержите основные цвета нашей свадьбы:</p>
+                
+                <div class="dress-code-selector">
+                    
+                    <div class="main-color-block blue-style" onclick="toggleColorDropdown(this)">
+                        <div class="main-color-trigger">
+                            <span class="color-name-label">Глубокий синий / Dusty Blue</span>
+                            <span class="dropdown-arrow">▼</span>
+                        </div>
+                        <div class="sub-colors-content">
+                            <div class="sub-colors-inner">
+                                <div class="color-row-strip" style="background-color: #0f1e29; color: #F5F3EF;">
+                                    <span>Тёмно-синий океан</span>
+                                    <span class="hex-code">#0f1e29</span>
+                                </div>
+                                <div class="color-row-strip" style="background-color: #305C7D; color: #F5F3EF;">
+                                    <span>Классический синий</span>
+                                    <span class="hex-code">#305C7D</span>
+                                </div>
+                                <div class="color-row-strip" style="background-color: #516f85; color: #F5F3EF;">
+                                    <span>Сизо-голубой</span>
+                                    <span class="hex-code">#516f85</span>
+                                </div>
+
+                                <div class="prohibited-zone bad-blue">
+                                    <span class="prohibited-title">🚫 ИСКЛЮЧИТЬ ИЗ ОБРАЗА:</span>
+                                    <span class="prohibited-desc">Кислотные, ядовитые, васильковые (#0047FF)</span>
+                                </div>
+
+                                <div class="lookbook-slider" onclick="event.stopPropagation();">
+                                    <img src="models/b1.webp" class="lookbook-img" onclick="openFullscreen(this.src)"><img src="models/b2.webp" class="lookbook-img" onclick="openFullscreen(this.src)"><img src="models/b3.webp" class="lookbook-img" onclick="openFullscreen(this.src)"><img src="models/b4.webp" class="lookbook-img" onclick="openFullscreen(this.src)"><img src="models/b5.webp" class="lookbook-img" onclick="openFullscreen(this.src)"><img src="models/b6.webp" class="lookbook-img" onclick="openFullscreen(this.src)"><img src="models/b7.webp" class="lookbook-img" onclick="openFullscreen(this.src)"><img src="models/b8.webp" class="lookbook-img" onclick="openFullscreen(this.src)"><img src="models/b9.webp" class="lookbook-img" onclick="openFullscreen(this.src)"><img src="models/b10.webp" class="lookbook-img" onclick="openFullscreen(this.src)"><img src="models/b11.webp" class="lookbook-img" onclick="openFullscreen(this.src)"><img src="models/b12.webp" class="lookbook-img" onclick="openFullscreen(this.src)"><img src="models/b13.webp" class="lookbook-img" onclick="openFullscreen(this.src)"><img src="models/b14.webp" class="lookbook-img" onclick="openFullscreen(this.src)"><img src="models/b15.webp" class="lookbook-img" onclick="openFullscreen(this.src)"><img src="models/b16.webp" class="lookbook-img" onclick="openFullscreen(this.src)"><img src="models/b17.webp" class="lookbook-img" onclick="openFullscreen(this.src)"><img src="models/b18.webp" class="lookbook-img" onclick="openFullscreen(this.src)"><img src="models/b19.webp" class="lookbook-img" onclick="openFullscreen(this.src)"><img src="models/b20.webp" class="lookbook-img" onclick="openFullscreen(this.src)"><img src="models/b21.webp" class="lookbook-img" onclick="openFullscreen(this.src)"><img src="models/b22.webp" class="lookbook-img" onclick="openFullscreen(this.src)"><img src="models/b23.webp" class="lookbook-img" onclick="openFullscreen(this.src)"><img src="models/b24.webp" class="lookbook-img" onclick="openFullscreen(this.src)"><img src="models/b25.webp" class="lookbook-img" onclick="openFullscreen(this.src)"><img src="models/b26.webp" class="lookbook-img" onclick="openFullscreen(this.src)"><img src="models/b27.webp" class="lookbook-img" onclick="openFullscreen(this.src)"><img src="models/b28.webp" class="lookbook-img" onclick="openFullscreen(this.src)"><img src="models/b29.webp" class="lookbook-img" onclick="openFullscreen(this.src)"><img src="models/b30.webp" class="lookbook-img" onclick="openFullscreen(this.src)"><img src="models/b31.webp" class="lookbook-img" onclick="openFullscreen(this.src)"><img src="models/b32.webp" class="lookbook-img" onclick="openFullscreen(this.src)"><img src="models/b33.webp" class="lookbook-img" onclick="openFullscreen(this.src)">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="main-color-block terra-style" onclick="toggleColorDropdown(this)">
+                        <div class="main-color-trigger">
+                            <span class="color-name-label">Тёплый терракотовый / Terracotta</span>
+                            <span class="dropdown-arrow">▼</span>
+                        </div>
+                        <div class="sub-colors-content">
+                            <div class="sub-colors-inner">
+                                <div class="color-row-strip" style="background-color: #451f15; color: #F5F3EF;">
+                                    <span>Коричнево-каштановый</span>
+                                    <span class="hex-code">#451f15</span>
+                                </div>
+                                <div class="color-row-strip" style="background-color: #C06C50; color: #F5F3EF;">
+                                    <span>Пряная терракота</span>
+                                    <span class="hex-code">#C06C50</span>
+                                </div>
+                                <div class="color-row-strip" style="background-color: #5E2B1D; color: #F5F3EF;">
+                                    <span>Природная глина</span>
+                                    <span class="hex-code">#5E2B1D</span>
+                                </div>
+
+                                <div class="prohibited-zone bad-orange">
+                                    <span class="prohibited-title">🚫 ИСКЛЮЧИТЬ ИЗ ОБРАЗА:</span>
+                                    <span class="prohibited-desc">Ядовитые, кислотные, морковные (#FF4500)</span>
+                                </div>
+
+                                <div class="lookbook-slider" onclick="event.stopPropagation();">
+                                    <img src="models/t1.webp" class="lookbook-img" onclick="openFullscreen(this.src)"><img src="models/t2.webp" class="lookbook-img" onclick="openFullscreen(this.src)"><img src="models/t3.webp" class="lookbook-img" onclick="openFullscreen(this.src)"><img src="models/t4.webp" class="lookbook-img" onclick="openFullscreen(this.src)"><img src="models/t5.webp" class="lookbook-img" onclick="openFullscreen(this.src)"><img src="models/t6.webp" class="lookbook-img" onclick="openFullscreen(this.src)"><img src="models/t7.webp" class="lookbook-img" onclick="openFullscreen(this.src)"><img src="models/t8.webp" class="lookbook-img" onclick="openFullscreen(this.src)"><img src="models/t9.webp" class="lookbook-img" onclick="openFullscreen(this.src)"><img src="models/t10.webp" class="lookbook-img" onclick="openFullscreen(this.src)"><img src="models/t11.webp" class="lookbook-img" onclick="openFullscreen(this.src)"><img src="models/t12.webp" class="lookbook-img" onclick="openFullscreen(this.src)"><img src="models/t13.webp" class="lookbook-img" onclick="openFullscreen(this.src)"><img src="models/t14.webp" class="lookbook-img" onclick="openFullscreen(this.src)"><img src="models/t15.webp" class="lookbook-img" onclick="openFullscreen(this.src)"><img src="models/t16.webp" class="lookbook-img" onclick="openFullscreen(this.src)"><img src="models/t17.webp" class="lookbook-img" onclick="openFullscreen(this.src)"><img src="models/t18.webp" class="lookbook-img" onclick="openFullscreen(this.src)"><img src="models/t24.webp" class="lookbook-img" onclick="openFullscreen(this.src)"><img src="models/t25.webp" class="lookbook-img" onclick="openFullscreen(this.src)"><img src="models/t26.webp" class="lookbook-img" onclick="openFullscreen(this.src)"><img src="models/t27.webp" class="lookbook-img" onclick="openFullscreen(this.src)">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="main-color-block neutral-style" onclick="toggleColorDropdown(this)" style="background-color: rgba(255, 255, 255, 0.04); border: 1px dashed rgba(255, 255, 255, 0.15); color: #F5F3EF;">
+                        <div class="main-color-trigger" style="margin-bottom: 12px;">
+                            <span class="color-name-label" style="color: #e9dbbe;">Дополнительные оттенки</span>
+                            <span class="dropdown-arrow">▼</span>
+                        </div>
+                        
+                        <div class="neutral-palette-subtitle" style="font-size: 12px; opacity: 0.7; margin-bottom: 12px; line-height: 1.4;">Прекрасно подойдут для обуви, аксессуаров или элементов одежды, завершающих ваш образ</div>
+                        
+                        <div class="neutral-rows-container" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 4px;">
+                            <div class="neutral-row-tag" style="background-color: #e9dbbe; color: #234159;">
+                                <span>Мягкий песочный</span>
+                                <span style="font-family: monospace; font-size:12px;">#e9dbbe</span>
+                            </div>
+                            <div class="neutral-row-tag" style="background-color: #f5efe1; color: #234159;">
+                                <span>Светлый молочный</span>
+                                <span style="font-family: monospace; font-size:12px;">#f5efe1</span>
+                            </div>
+                            <div class="neutral-row-tag" style="background-color: #7D8453; color: #F5F3EF;">
+                                <span>Приглушённый оливковый</span>
+                                <span style="font-family: monospace; font-size:12px;">#7D8453</span>
+                            </div>
+                        </div>
+
+                        <div class="sub-colors-content">
+                            <div class="sub-colors-inner" style="padding-top: 10px;">
+                                <div class="lookbook-slider" onclick="event.stopPropagation();">
+                                    <img src="models/out1.webp" class="lookbook-img" onclick="openFullscreen(this.src)"><img src="models/out2.webp" class="lookbook-img" onclick="openFullscreen(this.src)"><img src="models/out3.webp" class="lookbook-img" onclick="openFullscreen(this.src)"><img src="models/out4.webp" class="lookbook-img" onclick="openFullscreen(this.src)"><img src="models/out5.webp" class="lookbook-img" onclick="openFullscreen(this.src)"><img src="models/out6.webp" class="lookbook-img" onclick="openFullscreen(this.src)"><img src="models/out7.webp" class="lookbook-img" onclick="openFullscreen(this.src)"><img src="models/out8.webp" class="lookbook-img" onclick="openFullscreen(this.src)"><img src="models/out9.webp" class="lookbook-img" onclick="openFullscreen(this.src)"><img src="models/out10.webp" class="lookbook-img" onclick="openFullscreen(this.src)"><img src="models/out11.webp" class="lookbook-img" onclick="openFullscreen(this.src)"><img src="models/out12.webp" class="lookbook-img" onclick="openFullscreen(this.src)"><img src="models/out13.webp" class="lookbook-img" onclick="openFullscreen(this.src)"><img src="models/out14.webp" class="lookbook-img" onclick="openFullscreen(this.src)">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        
+
+        <section class="reveal">
+            <h2 class="section-title">Пожелания</h2>
+            <div class="wishes-card">
+                <p class="wishes-text">Не будем оригинальными, но будем искренне благодарны за практичность: лучший подарок для нас — это вклад в бюджет нашей новой семьи. А если конвертам вы предпочитаете современные технологии, мы будем очень рады электронным сертификатам на Ozon</p>
+                <p class="wishes-text" style="color: #C06C50; font-weight: 700; margin-bottom: 0;">Мы очень ценим ваше желание порадовать нас, но просим воздержаться от покупки живых цветов 💐 Вместо этого просто принесите с собой хорошее настроение!</p>
+            </div>
+        </section>
+
+        <section class="reveal">
+            <h2 class="section-title">Анкета гостя</h2>
+            <div class="content-card" style="padding: 12px; border-radius: 15px; background: rgba(255, 255, 255, 0.9);">
+                <p style="font-size: 14px; line-height: 1.6; margin-bottom: 20px; text-align: center; color: #333;">
+                    Пожалуйста, заполните анкету ниже, чтобы мы могли сделать праздник комфортным для каждого!
+                </p>
+                
+                <!-- Адаптивный контейнер для Google Формы -->
+                <div class="form-container" style="position: relative; width: 100%; height: 380px; overflow-y: auto; -webkit-overflow-scrolling: touch;">
+                    <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSdjpHXD-NHJhYWV6AlcWGsUX5idrMZmPmkBAciwmw4A_oKYog/viewform?embedded=true" 
+                            width="100%" 
+                            height="100%" 
+                            frameborder="0" 
+                            marginheight="0" 
+                            marginwidth="0"
+                            style="border: none; border-radius: 10px;">
+                        Загрузка...
+                    </iframe>
+                </div>
+            </div>
+        </section>
+        
+
+        <section class="reveal">
+            <h2 class="section-title">Контакты</h2>
+            <div class="content-card">
+                <div class="contacts-section" style="display: flex; flex-direction: column; gap: 12px;">
+                    
+                    <div class="contact-row">
+                        <div class="contact-info-left">
+                            <span class="role">Жених</span>
+                            <span class="name">Артём</span>
+                        </div>
+                        <a href="https://t.me/Artiomyo" target="_blank" class="tg-btn" style="background-color: #305C7D;">Написать</a>
+                    </div>
+
+                    <div class="contact-row">
+                        <div class="contact-info-left">
+                            <span class="role">Невеста</span>
+                            <span class="name">Валерия</span>
+                        </div>
+                        <a href="https://t.me/valeriavaleria_9" target="_blank" class="tg-btn" style="background-color: #305C7D;">Написать</a>
+                    </div>
+
+                    <div class="contact-row host-row">
+                        <div class="contact-info-left">
+                            <span class="role">Наш ведущий</span>
+                            <span class="name">Вячеслав</span>
+                        </div>
+                        <a href="https://t.me/superZaratus" target="_blank" class="tg-btn" style="background-color: #7D8453;">Написать</a>
+                    </div>
+
+                    <div class="contact-row host-row">
+                        <div class="contact-info-left">
+                            <span class="role">Свадебный бэкстейдж</span>
+                            <span class="name">Чат гостей</span>
+                        </div>
+                        <a href="https://t.me/+NYYoD27p01A5NjRi" target="_blank" class="tg-btn" style="background-color: #7D8453; text-align: center; min-width: 90px; box-sizing: border-box;">Вступить</a>
+                    </div>
+
+
+                </div>
+            </div>
+        </section>
+        
+
+    <div class="fixed-countdown" id="fixedCountdown">
+        <div class="countdown-item"><div class="countdown-value" id="days">00</div><div class="countdown-label">дн.</div></div>
+        <div class="countdown-item"><div class="countdown-value" id="hours">00</div><div class="countdown-label">час.</div></div>
+        <div class="countdown-item"><div class="countdown-value" id="minutes">00</div><div class="countdown-label">мин.</div></div>
+        <div class="countdown-item"><div class="countdown-value seconds" id="seconds">00</div><div class="countdown-label">сек.</div></div>
+    </div>
+
+<script>
+function copyLocationAddress(textToCopy, element) {
+    navigator.clipboard.writeText(textToCopy).then(() => {
+        const locTitle = element.querySelector('.loc-title');
+        const locAddr = element.querySelector('.loc-addr');
+        const locIcon = element.querySelector('.loc-icon');
+        
+        // Сохраняем старый текст
+        const oldTitle = locTitle.innerText;
+        const oldAddr = locAddr.innerText;
+        const oldIcon = locIcon.innerText;
+        
+        // Включаем статус "Скопировано"
+        element.classList.add('copied-state');
+        locTitle.innerText = 'Адрес скопирован в буфер!';
+        locAddr.innerText = 'Теперь его можно вставить в карты';
+        locIcon.innerText = '✓';
+        
+        // Через 2 секунды плавно возвращаем исходный вид
+        setTimeout(() => {
+            element.classList.remove('copied-state');
+            locTitle.innerText = oldTitle;
+            locAddr.innerText = oldAddr;
+            locIcon.innerText = oldIcon;
+        }, 2000);
+    }).catch(err => {
+        // Резервный метод копирования, если браузер заблокировал clipboard API
+        const textarea = document.createElement('textarea');
+        textarea.value = textToCopy;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+        
+        // Визуальный отклик для резерва
+        const locTitle = element.querySelector('.loc-title');
+        element.classList.add('copied-state');
+        locTitle.innerText = 'Скопировано!';
+        setTimeout(() => {
+            element.classList.remove('copied-state');
+            locTitle.innerText = 'Дворец бракосочетания №2 (Фурштатская)';
+        }, 2000);
+    });
+}
+</script>
+
+
+    <script>
+        // АВТОМАТИЧЕСКИЙ ПЕРЕВОРОТ КАРТОЧЕК В ЦИФРЫ (Раз в 4 секунды)
+        setInterval(() => {
+            const cells = document.querySelectorAll('.interactive-cell');
+            cells.forEach(cell => {
+                cell.classList.toggle('flipped');
+            });
+        }, 4000);
+
+        // БЕЗОПАСНЫЙ ПОЛНОЭКРАННЫЙ ПРОСМОТР ФОТО
+        function openFullscreen(src) {
+            const overlay = document.getElementById('fullscreenOverlay');
+            const img = document.getElementById('fullscreenImage');
+            img.src = src;
+            overlay.classList.add('active');
+        }
+
+        function closeFullscreen() {
+            const overlay = document.getElementById('fullscreenOverlay');
+            overlay.classList.remove('active');
+        }
+
+        // РЕНДЕР КАЛЕНДАРЯ
+        const calendarContainer = document.getElementById('calendarDays');
+        const septDays = [7, 8, 9, 10, 11, 12, 13];
+        
+        septDays.forEach(day => {
+            const cell = document.createElement('div');
+            cell.className = 'day-cell';
+            if (day === 10) {
+                cell.innerHTML = `<img src="CAL1.png" class="event-icon pulse-town" alt="Ратуша"><span class="date-number">${day}</span>`;
+            } else if (day === 11) {
+                cell.innerHTML = `<img src="CAL2.png" class="event-icon" alt="Домик"><span class="date-number">${day}</span>`;
+            } else {
+                cell.className += ' muted';
+                cell.innerHTML = `<span class="date-number">${day}</span>`;
+            }
+            calendarContainer.appendChild(cell);
+        });
+
+        // УПРАВЛЕНИЕ РАСКРЫТИЕМ ТАЙМЛАЙНА
+        function toggleTimeline(header) {
+            const item = header.parentElement;
+            const content = header.nextElementSibling;
+            if (item.classList.contains('open')) {
+                content.style.maxHeight = null;
+                item.classList.remove('open');
+            } else {
+                document.querySelectorAll('.timeline-item').forEach(el => {
+                    el.classList.remove('open');
+                    el.querySelector('.timeline-content').style.maxHeight = null;
+                });
+                content.style.maxHeight = content.scrollHeight + "px";
+                item.classList.add('open');
+            }
+        }
+
+        // УПРАВЛЕНИЕ СПИСКАМИ ДРЕСС-КОДА
+        function toggleColorDropdown(block) {
+            const content = block.querySelector('.sub-colors-content');
+            if (block.classList.contains('open')) {
+                content.style.maxHeight = null;
+                block.classList.remove('open');
+            } else {
+                content.style.maxHeight = content.scrollHeight + "px";
+                block.classList.add('open');
+            }
+        }
+
+        // ТАЙМЕР ОБРАТНОГО ОТСЧЕТА
+        const targetDate = new Date('September 10, 2026 11:00:00').getTime();
+        const timerBar = document.getElementById('fixedCountdown');
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const diff = targetDate - now;
+
+            if (diff <= 0) {
+                timerBar.innerHTML = "<div style='font-weight:700; color:#e9dbbe'>Этот день настал! 🎉</div>";
+                return;
+            }
+
+            const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const s = Math.floor((diff % (1000 * 60)) / 1000);
+
+            document.getElementById('days').innerText = d < 10 ? '0' + d : d;
+            document.getElementById('hours').innerText = h < 10 ? '0' + h : h;
+            document.getElementById('minutes').innerText = m < 10 ? '0' + m : m;
+            document.getElementById('seconds').innerText = s < 10 ? '0' + s : s;
+        }
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        setTimeout(() => { timerBar.classList.add('ready'); }, 300);
+
+        // НАСТРОЙКА НАБЛЮДАТЕЛЯ СЕКЦИЙ (.reveal)
+        function initScrollReveal() {
+            const reveals = document.querySelectorAll('.reveal');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                    } else {
+                        entry.target.classList.remove('active');
+                    }
+                });
+            }, { 
+                threshold: 0.05,
+                rootMargin: "-35% 0px -40% 0px"
+            });
+            reveals.forEach(target => observer.observe(target));
+        }
+        window.addEventListener('DOMContentLoaded', initScrollReveal);
+    </script>
+</body>
+</html>

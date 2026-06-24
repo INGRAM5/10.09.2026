@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вам письмо! | Артём & Валерия</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Tenor+Sans&display=swap');
+
+        /* СТИЛИ ЭКРАНА ЗАГРУЗКИ (PRELOADER) */
+        #preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #0f1e29;
+            z-index: 99999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+
+        .loader-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(233, 219, 190, 0.2);
+            border-radius: 50%;
+            border-top-color: #e9dbbe;
+            animation: spin 1s ease-in-out infinite;
+            margin-bottom: 15px;
+        }
+
+        .loader-text {
+            color: #f5efe1;
+            font-family: 'Tenor Sans', sans-serif;
+            font-size: 13px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            opacity: 0.8;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        #preloader.preloader-hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        /* ОСНОВНЫЕ СТИЛИ СТРАНИЦЫ */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-image: url('T1.png');
+            background-size: cover;
+            background-position: center;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            font-family: 'Montserrat', sans-serif;
+            perspective: 1000px;
+        }
+
+        /* Изначальное состояние конверта: он спрятан наверху и ждёт команды */
+        .envelope-container {
+            position: relative;
+            width: 320px;
+            height: 220px;
+            cursor: pointer;
+            opacity: 0;
+            transform: translateY(-100vh) rotate(-15deg) scale(0.5);
+        }
+
+        /* КЛАСС ЗАПУСКА АНИМАЦИИ ПРИЛЕТА (Добавляется через JS) */
+        .envelope-container.start-animation {
+            animation: flyIn 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.15) forwards;
+        }
+
+        @keyframes flyIn {
+            100% {
+                opacity: 1;
+                transform: translateY(0) rotate(0deg) scale(1);
+            }
+        }
+
+        /* Базовая подложка крафтового шума */
+        .craft-texture {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: repeating-linear-gradient(45deg, rgba(255,255,255, 0.03) 0px, rgba(255,255,255, 0.03) 2px, transparent 2px, transparent 4px),
+                              repeating-linear-gradient(-45deg, rgba(0,0,0, 0.02) 0px, rgba(0,0,0, 0.02) 2px, transparent 2px, transparent 4px);
+            pointer-events: none;
+        }
+
+        /* 1. Задняя глухая стенка */
+        .envelope-back {
+            position: absolute;
+            bottom: 0; left: 0;
+            width: 100%; height: 100%;
+            background-color: #1f3f58;
+            border-radius: 0 0 12px 12px;
+            box-shadow: inset 0 0 30px rgba(0,0,0,0.5), 0 15px 35px rgba(0,0,0,0.4);
+            z-index: 10;
+        }
+
+        /* 2. Письмо */
+        .envelope-letter {
+            position: absolute;
+            bottom: 15px; left: 15px;
+            width: 290px; height: 190px;
+            background-color: #F5F3EF;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.25);
+            z-index: 15;
+            transition: transform 1s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .envelope-letter h3 {
+            font-family: 'Tenor Sans', sans-serif;
+            font-size: 16px;
+            color: #C06C50;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            line-height: 1.5;
+        }
+
+        /* 3. Боковые клапаны */
+        .envelope-left-flap {
+            position: absolute;
+            bottom: 0; left: 0;
+            width: 100%; height: 100%;
+            background-color: #274d6a;
+            clip-path: polygon(0 0, 53% 50%, 0 100%);
+            z-index: 20;
+        }
+        .envelope-right-flap {
+            position: absolute;
+            bottom: 0; right: 0;
+            width: 100%; height: 100%;
+            background-color: #274d6a;
+            clip-path: polygon(100% 0, 47% 50%, 100% 100%);
+            z-index: 20;
+        }
+
+        /* 4. Сплошной нижний треугольник */
+        .envelope-bottom {
+            position: absolute;
+            bottom: 0; left: 0;
+            width: 100%; height: 100%;
+            background-color: #305C7D;
+            clip-path: polygon(0 100%, 50% 47%, 100% 100%);
+            border-radius: 0 0 12px 12px;
+            filter: drop-shadow(0 -4px 8px rgba(0,0,0,0.15));
+            z-index: 25;
+        }
+
+        /* 5. Верхний клапан с покачиванием */
+        .envelope-top-flap {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-color: #3b6e94;
+            clip-path: polygon(0 0, 50% 51%, 100% 0);
+            transform-origin: top center;
+            transform: rotateX(16deg);
+            z-index: 30;
+            filter: drop-shadow(0 5px 6px rgba(0,0,0,0.25));
+        }
+
+        /* Анимация заигрывания включается только ПОСЛЕ прилета конверта */
+        .envelope-container.start-animation .envelope-top-flap {
+            animation: baitOpen 2.2s infinite ease-in-out;
+            animation-delay: 1.3s; 
+        }
+
+        @keyframes baitOpen {
+            0%, 100% { transform: rotateX(16deg); }
+            50% { transform: rotateX(32deg); filter: drop-shadow(0 10px 10px rgba(0,0,0,0.3)); }
+        }
+
+        /* СОСТОЯНИЯ ПРИ КЛИКЕ (ОТКРЫТИЕ) */
+        .envelope-container.open .envelope-top-flap {
+            animation: none !important;
+            transform: rotateX(180deg);
+            z-index: 5;
+            transition: transform 0.6s ease-in-out;
+        }
+
+        .envelope-container.open .envelope-letter {
+            transform: translateY(-150px) scale(1.02);
+            z-index: 18;
+        }
+
+        /* Подсказка внизу */
+        .hint-text {
+            margin-top: 40px;
+            font-size: 13px;
+            font-weight: 700;
+            color: #e9dbbe;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 4px 10px rgba(0,0,0,0.8);
+            opacity: 0;
+        }
+
+        /* Анимация подсказки тоже запускается кодом */
+        .hint-text.start-hint {
+            animation: fadeInHint 0.5s ease-out 0.5s forwards, pulseHint 1.8s infinite 1.0s;
+        }
+
+        @keyframes fadeInHint { 100% { opacity: 0.8; } }
+        @keyframes pulseHint {
+            0%, 100% { transform: scale(1); opacity: 0.7; }
+            50% { transform: scale(1.05); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="preloader">
+        <div class="loader-spinner"></div>
+        <div class="loader-text">Загрузка атмосферы...</div>
+    </div>
+
+    <div class="envelope-container" id="envelope">
+        <div class="envelope-back">
+            <div class="craft-texture"></div>
+        </div>
+        
+        <div class="envelope-letter">
+            <div class="craft-texture" style="opacity: 0.4;"></div>
+            <h3>Вы приглашены<br>на свадьбу!</h3>
+            <p style="margin-top:8px; font-size:13px; color:#7D8453; font-weight:700; font-family:'Tenor Sans',sans-serif;">✦ 10.09.2026 ✦</p>
+        </div>
+
+        <div class="envelope-left-flap"><div class="craft-texture"></div></div>
+        <div class="envelope-right-flap"><div class="craft-texture"></div></div>
+        <div class="envelope-bottom"><div class="craft-texture"></div></div>
+        <div class="envelope-top-flap"><div class="craft-texture"></div></div>
+    </div>
+
+    <div class="hint-text" id="hint">Нажмите, чтобы открыть</div>
+
+    <script>
+        const envelope = document.getElementById('envelope');
+        const hint = document.getElementById('hint');
+        const preloader = document.getElementById('preloader');
+
+        // УПРАВЛЕНИЕ ЗАГРУЗКОЙ И СТАРТОМ АНИМАЦИЙ
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                // Плавное скрытие прелоадера
+                preloader.classList.add('preloader-hidden');
+                
+                // Ждём окончания растворения шторки (500мс) и КРАСИВО запускаем полёт конверта
+                setTimeout(() => {
+                    preloader.remove();
+                    
+                    // Вот тут магия! Конверт летит строго на чистый готовый стол
+                    envelope.classList.add('start-animation');
+                    hint.classList.add('start-hint');
+                }, 500);
+            }, 300);
+        });
+
+        // ЛОГИКА КЛИКА (ОТКРЫТИЕ КОНВЕРТА)
+        envelope.addEventListener('click', () => {
+            // Проверяем, прилетел ли конверт, чтобы нельзя было кликнуть в полете
+            if (!envelope.classList.contains('start-animation')) return;
+
+            hint.style.opacity = '0';
+            hint.style.transition = 'opacity 0.4s';
+            
+            envelope.classList.add('open');
+            
+            setTimeout(() => {
+                document.body.style.transition = 'opacity 0.6s ease-out';
+                document.body.style.opacity = '0';
+                
+                setTimeout(() => {
+                    window.location.href = 'invitation.html';
+                }, 600);
+            }, 2000);
+        });
+    </script>
+</body>
+</html>
